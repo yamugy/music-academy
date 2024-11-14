@@ -86,6 +86,11 @@ const PaymentForm = () => {
     localStorage.setItem('payments', JSON.stringify(payments));
 
     // 폼 초기화
+    resetForm();
+    alert('결제가 등록되었습니다.');
+  };
+
+  const resetForm = () => {
     setFormData({
       studentName: '',
       amount: '',
@@ -96,8 +101,6 @@ const PaymentForm = () => {
     setSearchTerm('');
     setSelectedStudent(null);
     setShowResults(false);
-    
-    alert('결제가 등록되었습니다.');
   };
 
   return (

@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { useAuth } from '../../contexts/AuthContext';
 
 const Layout = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { logout } = useAuth();
+  const navigate = useNavigate();
 
   const navItems = [
     { title: '대시보드', path: '/', className: 'text-emerald-600 hover:text-emerald-800' },
@@ -15,6 +18,11 @@ const Layout = ({ children }) => {
 
   const handleToggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
   };
 
   return (
@@ -40,6 +48,12 @@ const Layout = ({ children }) => {
                   {item.title}
                 </Link>
               ))}
+              <button
+                onClick={handleLogout}
+                className="text-red-600 hover:text-red-800 transition-all duration-200"
+              >
+                로그아웃
+              </button>
             </div>
 
             {/* Mobile menu button */}

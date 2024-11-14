@@ -9,22 +9,22 @@ const StudentList = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const loadData = () => {
-      const loadedStudents = JSON.parse(localStorage.getItem('students') || '[]');
-      const loadedPayments = JSON.parse(localStorage.getItem('payments') || '[]');
-      const loadedClasses = JSON.parse(localStorage.getItem('classes') || '[]');
-      
-      const enrichedStudents = loadedStudents.map(student => ({
-        ...student,
-        payments: loadedPayments.filter(p => p.studentName === student.name),
-        classes: loadedClasses.filter(c => c.studentName === student.name)
-      }));
-
-      setStudents(enrichedStudents);
-    };
-
     loadData();
   }, []);
+
+  const loadData = () => {
+    const loadedStudents = JSON.parse(localStorage.getItem('students') || '[]');
+    const loadedPayments = JSON.parse(localStorage.getItem('payments') || '[]');
+    const loadedClasses = JSON.parse(localStorage.getItem('classes') || '[]');
+    
+    const enrichedStudents = loadedStudents.map(student => ({
+      ...student,
+      payments: loadedPayments.filter(p => p.studentName === student.name),
+      classes: loadedClasses.filter(c => c.studentName === student.name)
+    }));
+
+    setStudents(enrichedStudents);
+  };
 
   const handleDelete = (id) => {
     if (window.confirm('정말 삭제하시겠습니까?')) {
@@ -42,6 +42,10 @@ const StudentList = () => {
   const handleNavigate = (path) => {
     setShowModal(false);
     navigate(`${path}?studentId=${selectedStudent.id}`);
+  };
+
+  const handlePrint = (studentId) => {
+    navigate(`/print/${studentId}`);
   };
 
   const filteredStudents = students.filter(student =>
@@ -104,6 +108,12 @@ const StudentList = () => {
                   >
                     삭제
                   </button>
+                  <button
+                    onClick={() => handlePrint(student.id)}
+                    className="text-blue-500 hover:text-blue-700 mr-2"
+                  >
+                    프린트
+                  </button>
                 </td>
               </tr>
             ))}
@@ -111,7 +121,7 @@ const StudentList = () => {
         </table>
       </div>
 
-      {/* 네비게이션 모�� */}
+      {/* 네비게이션 모달 */}
       {showModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-2xl shadow-xl max-w-sm w-full mx-4">

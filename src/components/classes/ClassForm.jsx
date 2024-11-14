@@ -84,6 +84,11 @@ const ClassForm = () => {
     localStorage.setItem('classes', JSON.stringify(classes));
 
     // 폼 초기화
+    resetForm();
+    alert('수업이 등록되었습니다.');
+  };
+
+  const resetForm = () => {
     setFormData({
       studentName: '',
       subject: '',
@@ -93,8 +98,6 @@ const ClassForm = () => {
     });
     setSelectedStudent(null);
     setSearchTerm('');
-    
-    alert('수업이 등록되었습니다.');
   };
 
   return (

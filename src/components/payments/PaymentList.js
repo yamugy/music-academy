@@ -62,12 +62,14 @@ const PaymentList = () => {
                     </p>
                   </div>
                 </div>
-                <button
-                  onClick={() => handleDelete(payment.id)}
-                  className="ml-4 text-red-500 hover:text-red-700"
-                >
-                  삭제
-                </button>
+                <td className="border px-4 py-2">
+                  <button
+                    onClick={() => handleDelete(payment.id)}
+                    className="text-red-500 hover:text-red-700 whitespace-nowrap"
+                  >
+                    삭제
+                  </button>
+                </td>
               </div>
             </div>
           ))

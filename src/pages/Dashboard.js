@@ -1,7 +1,6 @@
 import React from 'react';
 import DashboardOverview from '../components/dashboard/DashboardOverview';
 import TodayClasses from '../components/dashboard/TodayClasses';
-import PaymentStatus from '../components/dashboard/PaymentStatus';
 
 const Dashboard = () => {
   return (
@@ -11,9 +10,8 @@ const Dashboard = () => {
       </h1>
       <div className="space-y-8">
         <DashboardOverview />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 gap-8">
           <TodayClasses />
-          <PaymentStatus />
         </div>
       </div>
     </div>
