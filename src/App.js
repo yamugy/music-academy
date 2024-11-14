@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 import './styles/global.css';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -11,6 +11,7 @@ import ClassManagement from './pages/ClassManagement';
 import PaymentManagement from './pages/PaymentManagement';
 import Login from './pages/Login';
 import PrintView from './pages/PrintView';
+import Courses from './pages/Courses';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/print/:studentId" element={<PrintView />} />
+          <Route path="/courses" element={<Courses />} />
           <Route
             path="*"
             element={

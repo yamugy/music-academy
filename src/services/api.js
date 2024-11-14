@@ -1,18 +1,31 @@
-
-import axios from 'axios';
-
-const API_BASE_URL = 'http://localhost:3001';
+import { supabase } from './supabase';
 
 export const api = {
   // 강좌 관련
-  getCourses: () => axios.get(`${API_BASE_URL}/courses`),
-  getCourse: (id) => axios.get(`${API_BASE_URL}/courses/${id}`),
-  createCourse: (data) => axios.post(`${API_BASE_URL}/courses`, data),
-  updateCourse: (id, data) => axios.put(`${API_BASE_URL}/courses/${id}`, data),
-  
-  // 사용자 관련
-  getUsers: () => axios.get(`${API_BASE_URL}/users`),
-  getUser: (id) => axios.get(`${API_BASE_URL}/users/${id}`),
-  createUser: (data) => axios.post(`${API_BASE_URL}/users`, data),
-  updateUser: (id, data) => axios.put(`${API_BASE_URL}/users/${id}`, data)
+  getCourses: async () => {
+    const { data, error } = await supabase
+      .from('courses')
+      .select('*');
+    if (error) throw error;
+    return data;
+  },
+
+  createCourse: async (courseData) => {
+    const { data, error } = await supabase
+      .from('courses')
+      .insert([courseData])
+      .select();
+    if (error) throw error;
+    return data[0];
+  },
+
+  updateCourse: async (id, updates) => {
+    const { data, error } = await supabase
+      .from('courses')
+      .update(updates)
+      .eq('id', id)
+      .select();
+    if (error) throw error;
+    return data[0];
+  }
 };
