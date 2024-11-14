@@ -4,8 +4,6 @@ import { useNavigate } from 'react-router-dom';
 const StudentList = () => {
   const [students, setStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [payments, setPayments] = useState([]);
-  const [classes, setClasses] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const navigate = useNavigate();
@@ -23,8 +21,6 @@ const StudentList = () => {
       }));
 
       setStudents(enrichedStudents);
-      setPayments(loadedPayments);
-      setClasses(loadedClasses);
     };
 
     loadData();

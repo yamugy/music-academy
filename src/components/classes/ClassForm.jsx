@@ -35,7 +35,7 @@ const ClassForm = () => {
         setSearchTerm(student.name);
       }
     }
-  }, [searchParams]); // searchParams를 의존성 배열에 추가
+  }, [searchParams, formData]); // searchParams를 의존성 배열에 추가
 
   const filteredStudents = students.filter(student =>
     student.name.toLowerCase().includes(searchTerm.toLowerCase())
