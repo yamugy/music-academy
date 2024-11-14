@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* iOS 스타일 색상 */
+    --background: 210 40% 98%;
+    --foreground: 222.2 84% 4.9%;
+    
+    --primary: 204 100% 40%; /* iOS 파란색 */
+    --primary-foreground: 210 40% 98%;
+    
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 204 100% 40%;
+  }
+
+  .dark {
+    /* iOS 다크모드 색상 */
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    
+    /* 나머지 다크모드 색상도 iOS 스타일로 정의 */
+  }
+}
+
+@layer components {
+  /* iOS 스타일 컴포넌트 */
+  .card {
+    @apply rounded-2xl border border-gray-200 bg-white shadow-sm;
+  }
+
+  .button {
+    @apply rounded-full px-5 py-2.5 font-medium transition-colors;
+  }
+
+  .input {
+    @apply rounded-lg border border-gray-200 bg-white px-4 py-2 focus:ring-2 focus:ring-primary/20;
+  }
+
+  /* iOS 스타일 네비게이션 */
+  .nav-link {
+    @apply text-muted-foreground hover:text-primary transition-colors;
+  }
+
+  /* iOS 스타일 폼 요소 */
+  .form-input {
+    @apply w-full rounded-lg border border-gray-200 bg-white px-4 py-3;
+  }
+}
