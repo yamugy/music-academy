@@ -1,13 +1,15 @@
 {
   "files": {
-    "main.css": "/static/css/main.63082717.css",
-    "main.js": "/static/js/main.a9753ece.js",
-    "index.html": "/index.html",
-    "main.63082717.css.map": "/static/css/main.63082717.css.map",
-    "main.a9753ece.js.map": "/static/js/main.a9753ece.js.map"
+    "main.css": "/music-academy/static/css/main.e98f96ad.css",
+    "main.js": "/music-academy/static/js/main.b76386af.js",
+    "static/js/952.c4e8d515.chunk.js": "/music-academy/static/js/952.c4e8d515.chunk.js",
+    "index.html": "/music-academy/index.html",
+    "main.e98f96ad.css.map": "/music-academy/static/css/main.e98f96ad.css.map",
+    "main.b76386af.js.map": "/music-academy/static/js/main.b76386af.js.map",
+    "952.c4e8d515.chunk.js.map": "/music-academy/static/js/952.c4e8d515.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.63082717.css",
-    "static/js/main.a9753ece.js"
+    "static/css/main.e98f96ad.css",
+    "static/js/main.b76386af.js"
   ]
 }
