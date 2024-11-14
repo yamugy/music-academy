@@ -1,0 +1,10 @@
+
+{
+  "extends": [
+    "react-app",
+    "react-app/jest"
+  ],
+  "rules": {
+    // 추가 규칙 설정 가능
+  }
+}

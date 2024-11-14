@@ -1,0 +1,27 @@
+@media print {
+    /* 프린트 시 숨길 요소 */
+    .no-print {
+      display: none !important;
+    }
+  
+    /* 프린트 페이지 스타일 */
+    .print-container {
+      margin: 0;
+      padding: 20px;
+    }
+  
+    /* 테이블 스타일 */
+    table {
+      page-break-inside: auto;
+    }
+  
+    tr {
+      page-break-inside: avoid;
+      page-break-after: auto;
+    }
+  
+    /* 페이지 나누기 */
+    section {
+      page-break-inside: avoid;
+    }
+  }
