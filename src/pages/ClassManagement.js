@@ -24,7 +24,11 @@ const ClassManagement = () => {
 
         <div className="bg-card rounded-lg shadow-sm p-6 border">
           <h2 className="text-xl font-semibold mb-4">전체 수업 목록</h2>
+<<<<<<< HEAD
           <ClassList refreshTrigger={refreshKey} />
+=======
+          <ClassList />
+>>>>>>> 8b4305ea2df8aa5b80341974ef0a46c81c39452c
         </div>
       </div>
     </div>

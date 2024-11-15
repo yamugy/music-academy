@@ -87,6 +87,7 @@ const ClassForm = ({ onSubmitSuccess }) => {
         duration: formData.duration
       };
 
+<<<<<<< HEAD
       await classApi.create(classData);
       alert('수업이 등록되었습니다.');
       
@@ -112,6 +113,11 @@ const ClassForm = ({ onSubmitSuccess }) => {
         alert('수업 등록에 실패했습니다.');
       }
     }
+=======
+    // 폼 초기화
+    resetForm();
+    alert('수업이 등록되었습니다.');
+>>>>>>> 8b4305ea2df8aa5b80341974ef0a46c81c39452c
   };
 
   const resetForm = () => {

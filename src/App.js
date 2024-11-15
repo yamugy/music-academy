@@ -1,5 +1,9 @@
 import React from 'react';
+<<<<<<< HEAD
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+=======
+import { HashRouter as Router, Route, Routes } from 'react-router-dom';
+>>>>>>> 8b4305ea2df8aa5b80341974ef0a46c81c39452c
 import './styles/global.css';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -11,6 +15,10 @@ import ClassManagement from './pages/ClassManagement';
 import PaymentManagement from './pages/PaymentManagement';
 import Login from './pages/Login';
 import PrintView from './pages/PrintView';
+<<<<<<< HEAD
+=======
+import Courses from './pages/Courses';
+>>>>>>> 8b4305ea2df8aa5b80341974ef0a46c81c39452c
 
 function App() {
   return (
@@ -19,6 +27,10 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/print/:studentId" element={<PrintView />} />
+<<<<<<< HEAD
+=======
+          <Route path="/courses" element={<Courses />} />
+>>>>>>> 8b4305ea2df8aa5b80341974ef0a46c81c39452c
           <Route
             path="*"
             element={

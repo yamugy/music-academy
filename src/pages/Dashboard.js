@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
 import { dashboardApi } from '../utils/api';
 import Calendar from '../components/dashboard/Calendar';
+=======
+import React from 'react';
+import DashboardOverview from '../components/dashboard/DashboardOverview';
+import TodayClasses from '../components/dashboard/TodayClasses';
+>>>>>>> 8b4305ea2df8aa5b80341974ef0a46c81c39452c
 
 const Dashboard = () => {
   const [stats, setStats] = useState({
@@ -53,6 +59,7 @@ const Dashboard = () => {
   if (error) return <div className="text-center py-10 text-red-500">{error}</div>;
 
   return (
+<<<<<<< HEAD
     <div className="container mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6">대시보드</h1>
       
@@ -86,6 +93,16 @@ const Dashboard = () => {
               ))}
             </div>
           </div>
+=======
+    <div className="bg-dashboard">
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">
+        대시보드
+      </h1>
+      <div className="space-y-8">
+        <DashboardOverview />
+        <div className="grid grid-cols-1 gap-8">
+          <TodayClasses />
+>>>>>>> 8b4305ea2df8aa5b80341974ef0a46c81c39452c
         </div>
       </div>
 
