@@ -29,3 +29,4 @@ yarn-debug.log*
 yarn-error.log*
 
 // 민감한 파일들이 모두 포함됨 ✅
+node_modules
