@@ -19,9 +19,9 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "ajv": "^8.12.0",
-    "ajv-keywords": "^5.1.0",
-    "@jridgewell/sourcemap-codec": "^1.4.15",
+    "ajv": "8.12.0",
+    "ajv-keywords": "5.1.0",
+    "@jridgewell/sourcemap-codec": "1.4.15",
     "axios": "^1.7.7",
     "class-variance-authority": "^0.6.1",
     "clsx": "^1.2.1",
@@ -35,7 +35,8 @@
     "react-scripts": "5.0.1",
     "tailwind-merge": "^1.13.2",
     "tailwindcss-animate": "^1.0.6",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "workbox-webpack-plugin": "^6.6.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -45,7 +46,7 @@
     "deploy:vercel": "vercel deploy --prod --token=$VERCEL_TOKEN",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "vercel-build": "npm install --force && react-scripts build"
+    "vercel-build": "CI=false SKIP_PREFLIGHT_CHECK=true react-scripts build"
   },
   "homepage": ".",
   "eslintConfig": {
@@ -85,5 +86,9 @@
   },
   "engines": {
     "node": "20.x"
+  },
+  "resolutions": {
+    "ajv": "8.12.0",
+    "workbox-build": "6.6.0"
   }
 }

@@ -7,7 +7,7 @@
       "config": {
         "distDir": "build",
         "nodeVersion": "20.x",
-        "installCommand": "npm install --force"
+        "installCommand": "npm install --legacy-peer-deps"
       }
     }
   ],
