@@ -84,6 +84,10 @@ const PaymentForm = ({ students, preSelectedStudent, onPaymentComplete, onStuden
         createdAt: new Date().toISOString()
       };
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> af54ef1e75cb24a9242382d86a7f608a300dba09
       console.log('Submitting payment data:', paymentData); // 제출할 데이터 확인
       const response = await paymentApi.create(paymentData);
       console.log('Payment creation response:', response); // 생성 응답 확인
@@ -107,6 +111,14 @@ const PaymentForm = ({ students, preSelectedStudent, onPaymentComplete, onStuden
       console.error('Error details:', error.response?.data); // 에러 상세 정보 확인
       alert(`결제 등록에 실패했습니다. ${error.response?.data?.message || error.message}`);
     }
+<<<<<<< HEAD
+=======
+=======
+    // 폼 초기화
+    resetForm();
+    alert('결제가 등록되었습니다.');
+>>>>>>> 8b4305ea2df8aa5b80341974ef0a46c81c39452c
+>>>>>>> af54ef1e75cb24a9242382d86a7f608a300dba09
   };
 
   const resetForm = () => {

@@ -12,6 +12,10 @@ const StudentList = () => {
   const [editingStudent, setEditingStudent] = useState(null);
   const navigate = useNavigate();
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> af54ef1e75cb24a9242382d86a7f608a300dba09
   const handleDelete = async (studentId) => {
     if (window.confirm('정말로 이 학생을 삭제하시겠습니까? 관련된 모든 수업 데이터도 함께 삭제됩니다.')) {
       try {
@@ -44,6 +48,34 @@ const StudentList = () => {
     } catch (error) {
       console.error('Failed to update student:', error);
       alert('학생 정보 수정에 실패했습니다.');
+<<<<<<< HEAD
+=======
+=======
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = () => {
+    const loadedStudents = JSON.parse(localStorage.getItem('students') || '[]');
+    const loadedPayments = JSON.parse(localStorage.getItem('payments') || '[]');
+    const loadedClasses = JSON.parse(localStorage.getItem('classes') || '[]');
+    
+    const enrichedStudents = loadedStudents.map(student => ({
+      ...student,
+      payments: loadedPayments.filter(p => p.studentName === student.name),
+      classes: loadedClasses.filter(c => c.studentName === student.name)
+    }));
+
+    setStudents(enrichedStudents);
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm('정말 삭제하시겠습니까?')) {
+      const updatedStudents = students.filter(student => student.id !== id);
+      localStorage.setItem('students', JSON.stringify(updatedStudents));
+      setStudents(updatedStudents);
+>>>>>>> 8b4305ea2df8aa5b80341974ef0a46c81c39452c
+>>>>>>> af54ef1e75cb24a9242382d86a7f608a300dba09
     }
   };
 
@@ -65,6 +97,13 @@ const StudentList = () => {
       return;
     }
     navigate(`/print/${studentId}`);
+<<<<<<< HEAD
+=======
+  };
+
+  const handlePrint = (studentId) => {
+    navigate(`/print/${studentId}`);
+>>>>>>> af54ef1e75cb24a9242382d86a7f608a300dba09
   };
 
   const filteredStudents = students.filter(student =>
@@ -142,6 +181,10 @@ const StudentList = () => {
                   </span>
                 </td>
                 <td className="px-4 py-3 text-center text-base text-gray-900">
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> af54ef1e75cb24a9242382d86a7f608a300dba09
                   <div className="flex justify-center items-center space-x-3">
                     <button 
                       onClick={() => handleEdit(student)}
@@ -162,6 +205,23 @@ const StudentList = () => {
                       프린트
                     </button>
                   </div>
+<<<<<<< HEAD
+=======
+=======
+                  <button 
+                    onClick={() => handleDelete(student.id)} 
+                    className="text-red-600 hover:text-red-800 px-2 scale-120"
+                  >
+                    삭제
+                  </button>
+                  <button
+                    onClick={() => handlePrint(student.id)}
+                    className="text-blue-500 hover:text-blue-700 mr-2"
+                  >
+                    프린트
+                  </button>
+>>>>>>> 8b4305ea2df8aa5b80341974ef0a46c81c39452c
+>>>>>>> af54ef1e75cb24a9242382d86a7f608a300dba09
                 </td>
               </tr>
             ))}

@@ -4,7 +4,7 @@ import { studentApi, classApi } from '../../utils/api';
 import Button from '../ui/button';
 import Card from '../ui/card';
 
-const ClassForm = () => {
+const ClassForm = ({ onSubmitSuccess }) => {
   const [students, setStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -87,6 +87,10 @@ const ClassForm = () => {
         duration: formData.duration
       };
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> af54ef1e75cb24a9242382d86a7f608a300dba09
       await classApi.create(classData);
       alert('수업이 등록되었습니다.');
       
@@ -100,6 +104,13 @@ const ClassForm = () => {
       setSelectedStudent(null);
       setSearchTerm('');
       
+<<<<<<< HEAD
+=======
+      if (onSubmitSuccess) {
+        onSubmitSuccess();
+      }
+      
+>>>>>>> af54ef1e75cb24a9242382d86a7f608a300dba09
     } catch (error) {
       console.error('수업 등록 실패:', error);
       if (error.response?.data?.type === 'DUPLICATE_TIME') {
@@ -108,6 +119,14 @@ const ClassForm = () => {
         alert('수업 등록에 실패했습니다.');
       }
     }
+<<<<<<< HEAD
+=======
+=======
+    // 폼 초기화
+    resetForm();
+    alert('수업이 등록되었습니다.');
+>>>>>>> 8b4305ea2df8aa5b80341974ef0a46c81c39452c
+>>>>>>> af54ef1e75cb24a9242382d86a7f608a300dba09
   };
 
   const resetForm = () => {

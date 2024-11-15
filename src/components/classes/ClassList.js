@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
+<<<<<<< HEAD
 import { classApi } from '../../utils/api';
 
 const ClassList = () => {
+=======
+<<<<<<< HEAD
+import { classApi } from '../../utils/api';
+
+const ClassList = ({ refreshTrigger }) => {
+>>>>>>> af54ef1e75cb24a9242382d86a7f608a300dba09
   const [classes, setClasses] = useState([]);
   const [students, setStudents] = useState([]);
   const [editingClass, setEditingClass] = useState(null);
@@ -11,7 +18,11 @@ const ClassList = () => {
 
   useEffect(() => {
     fetchClasses();
+<<<<<<< HEAD
   }, [selectedDate]);
+=======
+  }, [selectedDate, refreshTrigger]);
+>>>>>>> af54ef1e75cb24a9242382d86a7f608a300dba09
 
   const fetchClasses = async () => {
     setLoading(true);
@@ -48,10 +59,58 @@ const ClassList = () => {
         console.error('수업 삭제 실패:', error);
         alert('수업 삭제에 실패했습니다.');
       }
+<<<<<<< HEAD
+=======
+=======
+
+const ClassList = () => {
+  const [classes, setClasses] = useState([]);
+  const [students, setStudents] = useState([]);
+  const [editingClass, setEditingClass] = useState(null);
+
+  useEffect(() => {
+    const loadedClasses = JSON.parse(localStorage.getItem('classes') || '[]');
+    const loadedStudents = JSON.parse(localStorage.getItem('students') || '[]');
+    
+    // 현재 시간 이전의 수업 필터링
+    const now = new Date();
+    const currentDate = now.toISOString().split('T')[0];
+    const currentTime = now.toTimeString().split(' ')[0].slice(0, 5);
+
+    const filteredClasses = loadedClasses.filter(classItem => {
+      if (classItem.classDate > currentDate) {
+        return true;
+      }
+      if (classItem.classDate === currentDate && classItem.classTime >= currentTime) {
+        return true;
+      }
+      return false;
+    });
+
+    // 필터링된 수업만 저장
+    if (filteredClasses.length !== loadedClasses.length) {
+      localStorage.setItem('classes', JSON.stringify(filteredClasses));
+    }
+
+    setClasses(filteredClasses);
+    setStudents(loadedStudents);
+  }, []);
+
+  const handleDelete = (id) => {
+    if (window.confirm('정말 삭제하시겠습니까?')) {
+      const updatedClasses = classes.filter(cls => cls.id !== id);
+      localStorage.setItem('classes', JSON.stringify(updatedClasses));
+      setClasses(updatedClasses);
+>>>>>>> 8b4305ea2df8aa5b80341974ef0a46c81c39452c
+>>>>>>> af54ef1e75cb24a9242382d86a7f608a300dba09
     }
   };
 
   const handleEdit = (classItem) => {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> af54ef1e75cb24a9242382d86a7f608a300dba09
     setEditingClass({
       ...classItem,
       studentId: classItem.studentId, // 학생 ID 정보 유지
@@ -93,6 +152,24 @@ const ClassList = () => {
       console.error('수업 수정 실패:', error);
       alert('수업 수정에 실패했습니다.');
     }
+<<<<<<< HEAD
+=======
+=======
+    setEditingClass({ ...classItem });
+  };
+
+  const handleUpdate = () => {
+    if (!editingClass) return;
+    
+    const updatedClasses = classes.map(cls => 
+      cls.id === editingClass.id ? editingClass : cls
+    );
+    
+    localStorage.setItem('classes', JSON.stringify(updatedClasses));
+    setClasses(updatedClasses);
+    setEditingClass(null);
+>>>>>>> 8b4305ea2df8aa5b80341974ef0a46c81c39452c
+>>>>>>> af54ef1e75cb24a9242382d86a7f608a300dba09
   };
 
   const getStudentName = (studentId) => {
@@ -115,10 +192,23 @@ const ClassList = () => {
         </thead>
         <tbody className="divide-y divide-gray-200">
           {classes.map(classItem => (
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> af54ef1e75cb24a9242382d86a7f608a300dba09
             <tr key={classItem._id}>
               {editingClass && editingClass._id === classItem._id ? (
                 <>
                   <td className="px-6 py-4">{editingClass.studentId?.name || classItem.studentId?.name}</td>
+<<<<<<< HEAD
+=======
+=======
+            <tr key={classItem.id}>
+              {editingClass && editingClass.id === classItem.id ? (
+                <>
+                  <td className="px-6 py-4">{getStudentName(classItem.studentId)}</td>
+>>>>>>> 8b4305ea2df8aa5b80341974ef0a46c81c39452c
+>>>>>>> af54ef1e75cb24a9242382d86a7f608a300dba09
                   <td className="px-6 py-4">{classItem.subject}</td>
                   <td className="px-6 py-4">
                     <input
@@ -161,7 +251,15 @@ const ClassList = () => {
                 </>
               ) : (
                 <>
+<<<<<<< HEAD
                   <td className="px-6 py-4">{classItem.studentId?.name || '미확인 학생'}</td>
+=======
+<<<<<<< HEAD
+                  <td className="px-6 py-4">{classItem.studentId?.name || '미확인 학생'}</td>
+=======
+                  <td className="px-6 py-4">{getStudentName(classItem.studentId)}</td>
+>>>>>>> 8b4305ea2df8aa5b80341974ef0a46c81c39452c
+>>>>>>> af54ef1e75cb24a9242382d86a7f608a300dba09
                   <td className="px-6 py-4">{classItem.subject}</td>
                   <td className="px-6 py-4">{classItem.classDate}</td>
                   <td className="px-6 py-4">{classItem.classTime}</td>
@@ -174,7 +272,15 @@ const ClassList = () => {
                       수정
                     </button>
                     <button
+<<<<<<< HEAD
                       onClick={() => handleDelete(classItem._id)}
+=======
+<<<<<<< HEAD
+                      onClick={() => handleDelete(classItem._id)}
+=======
+                      onClick={() => handleDelete(classItem.id)}
+>>>>>>> 8b4305ea2df8aa5b80341974ef0a46c81c39452c
+>>>>>>> af54ef1e75cb24a9242382d86a7f608a300dba09
                       className="text-red-600 hover:text-red-900"
                     >
                       삭제
