@@ -1,36 +1,49 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useServerData } from '../../hooks/useServerData';
+import { studentApi } from '../../utils/api';
+import EditStudentModal from './EditStudentModal';
 
 const StudentList = () => {
-  const [students, setStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [students, setStudents, loading, error] = useServerData('students');
   const [showModal, setShowModal] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
+  const [editingStudent, setEditingStudent] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const loadData = () => {
-      const loadedStudents = JSON.parse(localStorage.getItem('students') || '[]');
-      const loadedPayments = JSON.parse(localStorage.getItem('payments') || '[]');
-      const loadedClasses = JSON.parse(localStorage.getItem('classes') || '[]');
-      
-      const enrichedStudents = loadedStudents.map(student => ({
-        ...student,
-        payments: loadedPayments.filter(p => p.studentName === student.name),
-        classes: loadedClasses.filter(c => c.studentName === student.name)
-      }));
+  const handleDelete = async (studentId) => {
+    if (window.confirm('정말로 이 학생을 삭제하시겠습니까? 관련된 모든 수업 데이터도 함께 삭제됩니다.')) {
+      try {
+        const response = await studentApi.delete(studentId);
+        if (response.message) {
+          // 삭제 성공 시 학생 목록에서 제거
+          setStudents(students.filter(student => student._id !== studentId));
+          alert(response.message);
+        }
+      } catch (error) {
+        console.error('Delete student error:', error);
+        alert(error.response?.data?.message || '학생 삭제에 실패했습니다.');
+      }
+    }
+  };
 
-      setStudents(enrichedStudents);
-    };
+  const handleEdit = (student) => {
+    setEditingStudent(student);
+  };
 
-    loadData();
-  }, []);
-
-  const handleDelete = (id) => {
-    if (window.confirm('정말 삭제하시겠습니까?')) {
-      const updatedStudents = students.filter(student => student.id !== id);
-      localStorage.setItem('students', JSON.stringify(updatedStudents));
-      setStudents(updatedStudents);
+  const handleUpdate = async (updatedData) => {
+    try {
+      const response = await studentApi.update(editingStudent._id, updatedData);
+      const updatedStudents = students.map(student => 
+        student._id === editingStudent._id ? response : student
+      );
+      setStudents(updatedStudents); // updateStudents를 setStudents로 변경
+      setEditingStudent(null);
+      alert('학생 정보가 수정되었습니다.');
+    } catch (error) {
+      console.error('Failed to update student:', error);
+      alert('학생 정보 수정에 실패했습니다.');
     }
   };
 
@@ -41,12 +54,39 @@ const StudentList = () => {
 
   const handleNavigate = (path) => {
     setShowModal(false);
-    navigate(`${path}?studentId=${selectedStudent.id}`);
+    navigate(`${path}?studentId=${selectedStudent._id}`);
+  };
+
+  const handlePrint = (studentId) => {
+    console.log('Printing for student ID:', studentId); // 디버깅용
+    if (!studentId) {
+      console.error('Invalid student ID');
+      alert('학생 정보를 찾을 수 없습니다.');
+      return;
+    }
+    navigate(`/print/${studentId}`);
   };
 
   const filteredStudents = students.filter(student =>
     student.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // 로딩 상태와 에러 처리 추가
+  if (loading) {
+    return (
+      <div className="bg-white p-6 rounded-lg shadow">
+        <p className="text-center text-gray-600">데이터를 불러오는 중...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-white p-6 rounded-lg shadow">
+        <p className="text-center text-red-600">오류가 발생했습니다: {error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white p-6 rounded-lg shadow">
@@ -63,17 +103,18 @@ const StudentList = () => {
         <table className="w-full border-collapse">
           <thead>
             <tr className="bg-gray-50">
-              <th className="w-[16.66%] px-4 py-3 text-center text-base font-semibold text-gray-600 border-b scale-120">이름</th>
-              <th className="w-[16.66%] px-4 py-3 text-center text-base font-semibold text-gray-600 border-b scale-120">과목</th>
-              <th className="w-[16.66%] px-4 py-3 text-center text-base font-semibold text-gray-600 border-b scale-120">수업 횟수</th>
-              <th className="w-[16.66%] px-4 py-3 text-center text-base font-semibold text-gray-600 border-b scale-120">최근 결제</th>
-              <th className="w-[16.66%] px-4 py-3 text-center text-base font-semibold text-gray-600 border-b scale-120">미납금</th>
-              <th className="w-[16.66%] px-4 py-3 text-center text-base font-semibold text-gray-600 border-b scale-120">관리</th>
+              <th className="w-[14%] px-4 py-3 text-center text-base font-semibold text-gray-600 border-b scale-120">이름</th>
+              <th className="w-[14%] px-4 py-3 text-center text-base font-semibold text-gray-600 border-b scale-120">연락처</th>
+              <th className="w-[14%] px-4 py-3 text-center text-base font-semibold text-gray-600 border-b scale-120">과목</th>
+              <th className="w-[14%] px-4 py-3 text-center text-base font-semibold text-gray-600 border-b scale-120">수업 횟수</th>
+              <th className="w-[14%] px-4 py-3 text-center text-base font-semibold text-gray-600 border-b scale-120">최근 결제</th>
+              <th className="w-[14%] px-4 py-3 text-center text-base font-semibold text-gray-600 border-b scale-120">미납금</th>
+              <th className="w-[16%] px-4 py-3 text-center text-base font-semibold text-gray-600 border-b scale-120">관리</th>
             </tr>
           </thead>
           <tbody>
             {filteredStudents.map(student => (
-              <tr key={student.id} className="border-b hover:bg-gray-50">
+              <tr key={student._id} className="border-b hover:bg-gray-50">
                 <td className="px-4 py-3 text-center text-base text-gray-900">
                   <span 
                     className="font-medium text-blue-600 cursor-pointer hover:text-blue-800 scale-120"
@@ -81,6 +122,9 @@ const StudentList = () => {
                   >
                     {student.name}
                   </span>
+                </td>
+                <td className="px-4 py-3 text-center text-base text-gray-900 scale-120">
+                  {student.phone}
                 </td>
                 <td className="px-4 py-3 text-center text-base text-gray-900 scale-120">{student.subject}</td>
                 <td className="px-4 py-3 text-center text-base text-gray-900 scale-120">{student.classes?.length || 0}</td>
@@ -98,12 +142,26 @@ const StudentList = () => {
                   </span>
                 </td>
                 <td className="px-4 py-3 text-center text-base text-gray-900">
-                  <button 
-                    onClick={() => handleDelete(student.id)} 
-                    className="text-red-600 hover:text-red-800 px-2 scale-120"
-                  >
-                    삭제
-                  </button>
+                  <div className="flex justify-center items-center space-x-3">
+                    <button 
+                      onClick={() => handleEdit(student)}
+                      className="inline-flex items-center text-blue-600 hover:text-blue-800 px-3 py-1 border border-blue-600 rounded-lg hover:bg-blue-50"
+                    >
+                      수정
+                    </button>
+                    <button 
+                      onClick={() => handleDelete(student._id)} 
+                      className="inline-flex items-center text-red-600 hover:text-red-800 px-3 py-1 border border-red-600 rounded-lg hover:bg-red-50"
+                    >
+                      삭제
+                    </button>
+                    <button
+                      onClick={() => handlePrint(student._id)}
+                      className="inline-flex items-center text-green-600 hover:text-green-800 px-3 py-1 border border-green-600 rounded-lg hover:bg-green-50"
+                    >
+                      프린트
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -111,7 +169,7 @@ const StudentList = () => {
         </table>
       </div>
 
-      {/* 네비게이션 모�� */}
+      {/* 네비게이션 모달 */}
       {showModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-2xl shadow-xl max-w-sm w-full mx-4">
@@ -140,6 +198,14 @@ const StudentList = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {editingStudent && (
+        <EditStudentModal
+          student={editingStudent}
+          onClose={() => setEditingStudent(null)}
+          onUpdate={handleUpdate}
+        />
       )}
     </div>
   );

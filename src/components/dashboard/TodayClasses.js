@@ -1,24 +1,29 @@
 import React, { useState, useEffect } from 'react';
+import { dashboardApi } from '../../utils/api';
 
 const TodayClasses = () => {
   const [weeklyClasses, setWeeklyClasses] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadClasses = () => {
-      const classes = JSON.parse(localStorage.getItem('classes') || '[]');
-      const today = new Date();
-      const nextWeek = new Date(today);
-      nextWeek.setDate(today.getDate() + 7);
-
-      const filteredClasses = classes.filter(cls => {
-        const classDate = new Date(cls.classDate);
-        return classDate >= today && classDate <= nextWeek;
-      }).sort((a, b) => new Date(a.classDate) - new Date(b.classDate));
-
-      setWeeklyClasses(filteredClasses);
+    const fetchClasses = async () => {
+      try {
+        setLoading(true);
+        const response = await dashboardApi.getStats();
+        if (response.success && response.data) {
+          setWeeklyClasses(response.data.weeklyClasses.map(cls => ({
+            ...cls,
+            studentName: cls.studentId?.name || '미정'
+          })));
+        }
+      } catch (error) {
+        console.error('Failed to fetch classes:', error);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    loadClasses();
+    fetchClasses();
   }, []);
 
   const formatDate = (dateString) => {
@@ -44,13 +49,17 @@ const TodayClasses = () => {
         <span>주간 수업 일정</span>
       </h2>
       <div className="space-y-4">
-        {weeklyClasses.length === 0 ? (
+        {loading ? (
+          <div className="text-gray-700 bg-gray-50/80 rounded-xl p-4 backdrop-blur-sm border border-gray-200">
+            로딩 중...
+          </div>
+        ) : weeklyClasses.length === 0 ? (
           <div className="text-gray-700 bg-gray-50/80 rounded-xl p-4 backdrop-blur-sm border border-gray-200">
             예정된 수업이 없습니다.
           </div>
         ) : (
           weeklyClasses.map(cls => (
-            <div key={cls.id} className="bg-gray-50/80 rounded-xl p-4 backdrop-blur-sm border border-gray-200">
+            <div key={cls._id} className="bg-gray-50/80 rounded-xl p-4 backdrop-blur-sm border border-gray-200">
               <div className="flex justify-between items-start">
                 <div>
                   <h3 className="font-medium text-gray-900">{cls.studentName}</h3>

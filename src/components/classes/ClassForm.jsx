@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { studentApi, classApi } from '../../utils/api';
 import Button from '../ui/button';
 import Card from '../ui/card';
 
-const ClassForm = () => {
+const ClassForm = ({ onSubmitSuccess }) => {
   const [students, setStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -18,24 +19,29 @@ const ClassForm = () => {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    const loadedStudents = JSON.parse(localStorage.getItem('students') || '[]');
-    setStudents(loadedStudents);
-
-    // URL에서 studentId를 읽어서 자동 기입
-    const studentId = searchParams.get('studentId');
-    if (studentId) {
-      const student = loadedStudents.find(s => s.id === Number(studentId));
-      if (student) {
-        setSelectedStudent(student);
-        setFormData({
-          ...formData,
-          studentName: student.name,
-          subject: student.subject
-        });
-        setSearchTerm(student.name);
+    const fetchStudents = async () => {
+      try {
+        const response = await studentApi.getAll();
+        setStudents(response);
+        
+        // URL에서 studentId를 읽어서 자동 기입
+        const studentId = searchParams.get('studentId');
+        if (studentId) {
+          const student = response.find(s => s._id === studentId); // id -> _id로 변경
+          if (student) {
+            setSelectedStudent(student);
+            setFormData(prev => ({
+              ...prev,
+              studentName: student.name
+            }));
+          }
+        }
+      } catch (error) {
+        console.error('학생 목록 로딩 실패:', error);
       }
-    }
-  }, [searchParams, formData]); // searchParams를 의존성 배열에 추가
+    };
+    fetchStudents();
+  }, [searchParams]);
 
   const filteredStudents = students.filter(student =>
     student.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -65,25 +71,50 @@ const ClassForm = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedStudent) {
       alert('학생을 선택해주세요.');
       return;
     }
 
-    const classes = JSON.parse(localStorage.getItem('classes') || '[]');
-    const newClass = {
-      id: Date.now(),
-      ...formData,
-      studentId: selectedStudent.id,
-      createdAt: new Date().toISOString()
-    };
-    
-    classes.push(newClass);
-    localStorage.setItem('classes', JSON.stringify(classes));
+    try {
+      const classData = {
+        studentId: selectedStudent._id,
+        subject: formData.subject,
+        classDate: formData.classDate,
+        classTime: formData.classTime,
+        duration: formData.duration
+      };
 
-    // 폼 초기화
+      await classApi.create(classData);
+      alert('수업이 등록되었습니다.');
+      
+      setFormData({
+        studentName: '',
+        subject: '',
+        classDate: '',
+        classTime: '',
+        duration: '60'
+      });
+      setSelectedStudent(null);
+      setSearchTerm('');
+      
+      if (onSubmitSuccess) {
+        onSubmitSuccess();
+      }
+      
+    } catch (error) {
+      console.error('수업 등록 실패:', error);
+      if (error.response?.data?.type === 'DUPLICATE_TIME') {
+        alert('해당 시간에 이미 예약된 수업이 있습니다.');
+      } else {
+        alert('수업 등록에 실패했습니다.');
+      }
+    }
+  };
+
+  const resetForm = () => {
     setFormData({
       studentName: '',
       subject: '',
@@ -93,8 +124,6 @@ const ClassForm = () => {
     });
     setSelectedStudent(null);
     setSearchTerm('');
-    
-    alert('수업이 등록되었습니다.');
   };
 
   return (

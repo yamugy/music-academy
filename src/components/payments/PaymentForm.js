@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { studentApi, paymentApi } from '../../utils/api'; // API import 추가
 
-const PaymentForm = () => {
+const PaymentForm = ({ students, preSelectedStudent, onPaymentComplete, onStudentSelect }) => {
   const [searchParams] = useSearchParams();
-  const [students, setStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [showResults, setShowResults] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -22,23 +22,15 @@ const PaymentForm = () => {
   };
 
   useEffect(() => {
-    const loadedStudents = JSON.parse(localStorage.getItem('students') || '[]');
-    setStudents(loadedStudents);
-
-    // URL에서 studentId를 읽어서 자동 기입
-    const studentId = searchParams.get('studentId');
-    if (studentId) {
-      const student = loadedStudents.find(s => s.id === Number(studentId));
-      if (student) {
-        setSelectedStudent(student);
-        setFormData({
-          ...formData,
-          studentName: student.name
-        });
-        setSearchTerm(student.name);
-      }
+    if (preSelectedStudent) {
+      setSelectedStudent(preSelectedStudent);
+      setFormData(prev => ({
+        ...prev,
+        studentName: preSelectedStudent.name
+      }));
+      setSearchTerm(preSelectedStudent.name);
     }
-  }, [searchParams, formData]); // searchParams를 의존성 배열에 추가
+  }, [preSelectedStudent]);
 
   const filteredStudents = students.filter(student =>
     student.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -52,6 +44,11 @@ const PaymentForm = () => {
     });
     setSearchTerm(student.name);
     setShowResults(false);
+    
+    // 학생 선택 시 상위 컴포넌트에 알림
+    if (onStudentSelect) {
+      onStudentSelect(student);
+    }
   };
 
   const handleSearchChange = (e) => {
@@ -63,29 +60,56 @@ const PaymentForm = () => {
         ...formData,
         studentName: ''
       });
+      // 검색어가 비워질 때 상위 컴포넌트에 null 전달
+      if (onStudentSelect) {
+        onStudentSelect(null);
+      }
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedStudent) {
       alert('학생을 선택해주세요.');
       return;
     }
 
-    const payments = JSON.parse(localStorage.getItem('payments') || '[]');
-    const newPayment = {
-      id: Date.now(),
-      ...formData,
-      studentId: selectedStudent.id,
-      paymentTypeName: paymentTypes[formData.paymentType], // 한글 결제방식 추가
-      createdAt: new Date().toISOString()
-    };
-    
-    payments.push(newPayment);
-    localStorage.setItem('payments', JSON.stringify(payments));
+    try {
+      const paymentData = {
+        studentId: selectedStudent._id,
+        amount: Number(formData.amount),
+        paymentDate: formData.paymentDate,
+        paymentMonth: formData.paymentMonth,
+        paymentType: paymentTypes[formData.paymentType], // 한글 결제 방식으로 변환
+        createdAt: new Date().toISOString()
+      };
 
-    // 폼 초기화
+      console.log('Submitting payment data:', paymentData); // 제출할 데이터 확인
+      const response = await paymentApi.create(paymentData);
+      console.log('Payment creation response:', response); // 생성 응답 확인
+      
+      if (response) {
+        onPaymentComplete();
+        onStudentSelect(selectedStudent);
+        
+        setFormData(prev => ({
+          ...prev,
+          amount: '',
+          paymentDate: '',
+          paymentMonth: '',
+          paymentType: 'cash'
+        }));
+        
+        alert('결제가 등록되었습니다.');
+      }
+    } catch (error) {
+      console.error('결제 등록 실패:', error);
+      console.error('Error details:', error.response?.data); // 에러 상세 정보 확인
+      alert(`결제 등록에 실패했습니다. ${error.response?.data?.message || error.message}`);
+    }
+  };
+
+  const resetForm = () => {
     setFormData({
       studentName: '',
       amount: '',
@@ -96,8 +120,6 @@ const PaymentForm = () => {
     setSearchTerm('');
     setSelectedStudent(null);
     setShowResults(false);
-    
-    alert('결제가 등록되었습니다.');
   };
 
   return (
