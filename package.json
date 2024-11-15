@@ -3,6 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/core": "^7.22.5",
+    "@babel/plugin-transform-class-properties": "^7.22.5",
+    "@babel/plugin-transform-private-methods": "^7.22.5",
+    "@babel/plugin-transform-private-property-in-object": "^7.22.11",
+    "@babel/preset-react": "^7.22.5",
     "@fullcalendar/core": "^6.1.15",
     "@fullcalendar/daygrid": "^6.1.15",
     "@fullcalendar/interaction": "^6.1.15",
@@ -14,25 +19,30 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "ajv": "^8.17.1",
+    "axios": "^1.7.7",
     "class-variance-authority": "^0.6.1",
     "clsx": "^1.2.1",
+    "date-fns": "^4.1.0",
     "lucide-react": "^0.252.0",
     "react": "^18.2.0",
+    "react-device-detect": "^2.2.3",
     "react-dom": "^18.2.0",
+    "react-responsive": "^9.0.2",
     "react-router-dom": "^6.11.2",
     "react-scripts": "5.0.1",
     "tailwind-merge": "^1.13.2",
     "tailwindcss-animate": "^1.0.6",
-    "web-vitals": "^2.1.4",
-    "react-device-detect": "^2.2.3",
-    "react-responsive": "^9.0.2"
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy:vercel": "vercel --prod"
+    "deploy:vercel": "vercel --prod",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -53,13 +63,16 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@tailwindcss/forms": "^0.5.3",
     "autoprefixer": "^10.4.14",
-    "postcss": "^8.4.23",
-    "tailwindcss": "^3.3.2",
     "eslint": "^8.23.0",
+    "postcss": "^8.4.23",
+    "postcss-normalize": "^10.0.1",
     "prettier": "^2.7.1",
-    "@babel/plugin-proposal-private-property-in-object": "^7.18.6",
-    "postcss-normalize": "^10.0.1"
+    "rimraf": "^5.0.1",
+    "svgo": "^3.0.2",
+    "tailwindcss": "^3.3.2",
+    "gh-pages": "^6.1.0"
   }
 }

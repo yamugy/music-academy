@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { studentApi } from '../../utils/api';
 
 const StudentForm = () => {
   const [formData, setFormData] = useState({
@@ -9,27 +10,50 @@ const StudentForm = () => {
     startDate: ''
   });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const students = JSON.parse(localStorage.getItem('students') || '[]');
-    const newStudent = {
-      id: Date.now(),
-      ...formData,
-      // 과목이 'other'인 경우 customSubject 값을 사용
-      subject: formData.subject === 'other' ? formData.customSubject : formData.subject,
-      createdAt: new Date().toISOString()
-    };
-    students.push(newStudent);
-    localStorage.setItem('students', JSON.stringify(students));
+  const [loading, setLoading] = useState(false); // 로딩 상태 추가
 
-    setFormData({
-      name: '',
-      phone: '',
-      subject: '',
-      customSubject: '',
-      startDate: ''
-    });
-    alert('학생이 등록되었습니다.');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    const studentData = {
+      name: formData.name,
+      phone: formData.phone,
+      subject: formData.subject === 'other' ? formData.customSubject : formData.subject,
+      startDate: formData.startDate
+    };
+
+    try {
+      setLoading(true); // 로딩 상태 추가
+      const response = await studentApi.create(studentData);
+      console.log('서버 응답:', response);
+      
+      setFormData({
+        name: '',
+        phone: '',
+        subject: '',
+        customSubject: '',
+        startDate: ''
+      });
+      
+      alert('학생이 등록되었습니다.');
+    } catch (error) {
+      console.error('API 에러:', error);
+      let errorMessage = '학생 등록에 실패했습니다.';
+      
+      if (error.response?.data?.type === 'DUPLICATE_NAME') {
+        errorMessage = '이미 등록된 학생 이름입니다.';
+      } else if (!navigator.onLine) {
+        errorMessage = '인터넷 연결을 확인해주세요.';
+      } else if (error.code === 'ECONNABORTED') {
+        errorMessage = '서버 응답이 없습니다.';
+      } else if (error.response) {
+        errorMessage = `등록 실패: ${error.response.data.message || '알 수 없는 오류'}`;
+      }
+      
+      alert(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
