@@ -19,7 +19,8 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "ajv": "^8.17.1",
+    "ajv": "^8.12.0",
+    "ajv-keywords": "^5.1.0",
     "axios": "^1.7.7",
     "class-variance-authority": "^0.6.1",
     "clsx": "^1.2.1",
@@ -37,19 +38,24 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "CI=false && react-scripts build",
+    "build": "CI=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy:vercel": "vercel --prod",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "vercel-build": "CI=false react-scripts build"
   },
-  "homepage": "https://yamugy.github.io/music-academy",
+  "homepage": ".",
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "rules": {
+      "eqeqeq": "warn",
+      "no-unused-vars": "warn"
+    }
   },
   "browserslist": {
     "production": [
@@ -75,5 +81,8 @@
     "rimraf": "^5.0.1",
     "svgo": "^3.0.2",
     "tailwindcss": "^3.3.2"
+  },
+  "engines": {
+    "node": "16.x"
   }
 }
